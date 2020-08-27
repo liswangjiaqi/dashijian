@@ -37,7 +37,41 @@
       </form>
     </div>
   </div>
+<script>
+  // 入口函数
+  $(function () {
+    $('.input_sub').click(function (e) {//设置点击事件
+      e.preventDefault();// 阻止默认跳转事件
+      let username = $('.input_txt').val();  //获取账号
+      let password = $('.input_pass').val(); //获取密码
+      if ( username.length == 0 || username.length == 0 ) {
+        // console.log('222');
+        alert('内容不能为空');
+        return; // 结束 后面的代码不执行
+      };
+      $.ajax({// 向后台发请求 获取数据
+        url:'http://localhost:8080/api/v1/admin/user/login',
+        type:'post',
+        dataType:'json',
+        data:{
+          username: username,
+          password: password
+        },
+        success: function(backData){
+          // console.log(backData);
+          if (backData.code == 200) {
+            localStorage.getItem('Authorization',backData.token);//保存账号到本地
+            alert(backData.msg);
+            window.location.href= './index.html';//跳转到首页
+          } else if (backData.code == 400) {
+            alert(backData.msg)
+          }
+        }
+      });
+    })
 
+  });
+</script>
 </body>
 
 </html>
